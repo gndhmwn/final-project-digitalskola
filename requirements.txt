@@ -1,0 +1,9 @@
+fastapi
+python-multipart
+SQLAlchemy
+PyMySQL
+python-dotenv
+uvicorn
+Jinja2
+pydantic-settings
+redis

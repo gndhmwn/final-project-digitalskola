@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Undangan Pernikahan {{ groom_name }} & {{ bride_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Wedding Invitation</h1>
+        <h2>{{ groom_name }} & {{ bride_name }}</h2>
+        <p>Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i</p>
+        <div class="guest-name">{{ guest.name }}</div>
+        <p>untuk hadir dalam resepsi pernikahan kami.</p>
+        
+        <div class="event-details">
+            <div class="event-card">
+                <h4>Akad Nikah</h4>
+                <p>Sabtu, 21 September 2025</p>
+                <p>Pukul: 09.00 WIB</p>
+                <p>Lokasi: Masjid Raya Jakarta</p>
+            </div>
+            <div class="event-card">
+                <h4>Resepsi</h4>
+                <p>Sabtu, 21 September 2025</p>
+                <p>Pukul: 11.00 - 15.00 WIB</p>
+                <p>Lokasi: Gedung Balai Kartini</p>
+            </div>
+        </div>
+        <!-- <a href="/rsvp" class="btn">Konfirmasi Kehadiran</a> -->
+        <a href="/l5FaD1Lcmieu6U121K6Zy6jgQrYEjfoV8aVIMYrXoqVIj7FhHLrTFBfMICQljjGAMAFmZ0dcW69ricQh" class="btn">Konfirmasi Kehadiran</a>
+    </div>
+{% endblock %}

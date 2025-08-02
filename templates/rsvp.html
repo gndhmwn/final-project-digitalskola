@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Konfirmasi Kehadiran{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Konfirmasi Kehadiran</h1>
+        <p>Mohon isi formulir di bawah ini untuk konfirmasi kehadiran Anda.</p>
+        <!-- <form action="/rsvp" method="post"> -->
+        <form action="/l5FaD1Lcmieu6U121K6Zy6jgQrYEjfoV8aVIMYrXoqVIj7FhHLrTFBfMICQljjGAMAFmZ0dcW69ricQh" method="post">
+            <label for="name">Nama Lengkap:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="is_attending">Apakah Anda akan hadir?</label>
+            <div style="text-align: left;">
+                <input type="checkbox" id="is_attending" name="is_attending" value="true"> Ya, saya akan hadir
+            </div>
+            
+            <label for="message">Pesan & Doa (Opsional):</label>
+            <textarea id="message" name="message" rows="4"></textarea>
+            
+            <button type="submit" class="btn">Kirim Konfirmasi</button>
+        </form>
+    </div>
+{% endblock %}
