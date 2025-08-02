@@ -24,6 +24,5 @@ wedding-invitation/
 ├── requirements.txt
 
 
-uvicorn app.main:app --host '0.0.0.0' --reload
 
-http://127.0.0.1:8080/?name=John+Doe&security_code=nikah2025
+
