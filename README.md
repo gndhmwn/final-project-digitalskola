@@ -18,7 +18,7 @@
    ```bash
    cd final-project-digitalskola
    
-3.a. ✅ Start Containers:
+3. ✅ Start Containers:
    ```bash
    docker compose -f docker-compose.staging.yml up -d --> for staging
    docker compose -f docker-compose.prod.yml up -d --> for production
