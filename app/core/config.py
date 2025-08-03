@@ -11,11 +11,15 @@ class Settings(BaseSettings):
     groom_name: str
     default_security_code: Optional[str] = None
     
-    # Variabel database baru yang ditambahkan untuk Docker Compose
+    # Mysql
     mysql_root_password: str
     mysql_database: str
     mysql_user: str
     mysql_password: str
+
+    # Redis
+    redis_host: str
+    redis_port: int
 
     class Config:
         env_file = ".env"
