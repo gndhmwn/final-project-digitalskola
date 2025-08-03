@@ -60,12 +60,3 @@ This project demonstrates a complete **cloud engineering** implementation featur
 
 ---
 
-## Technical Implementation
-```mermaid
-graph LR
-    A[Jenkins] --> B[Manual Cloud Setup]
-    B --> C[Application]
-    C --> D[Prometheus]
-    C --> E[Loki]
-    D --> F[Grafana]
-    E --> F
