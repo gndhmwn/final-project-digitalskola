@@ -152,8 +152,8 @@ pipeline {
                         try {
                             def response = sh(
                                 returnStdout: true, 
-                                script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${PRODUCTION_PORT}/?name=user+test&security_code=${SECURITY_CODE}"
-                                // script: "curl -s -o /dev/null -w '%{http_code}' https://${PUBLIC_URL}/?name=user+test&security_code=${SECURITY_CODE}"
+                                // script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${PRODUCTION_PORT}/?name=user+test&security_code=${SECURITY_CODE}"
+                                script: "curl -s -o /dev/null -w '%{http_code}' https://${PUBLIC_URL}/?name=user+test&security_code=${SECURITY_CODE}"
                             ).trim()
                             
                             if (response == "200") {
