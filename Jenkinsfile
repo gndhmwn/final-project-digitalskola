@@ -14,7 +14,7 @@ pipeline {
         STAGING_DIR = '/home/mr-admin/container/final-project-staging'
         PRODUCTION_DIR = '/home/mr-admin/container/final-project-prod'
         
-        SSH_CREDENTIALS_ID = 'id_rsa'  // ID of the SSH credentials in Jenkins
+        SSH_CREDENTIALS_ID = 'ssh_auth'  // ID of the SSH credentials in Jenkins
     }
 
     stages {
