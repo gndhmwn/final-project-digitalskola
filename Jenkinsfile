@@ -152,7 +152,7 @@ pipeline {
                         try {
                             def response = sh(
                                 returnStdout: true, 
-                                script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${PRODUCTION_PORT}"
+                                script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${PRODUCTION_PORT}/?name=user+test&security_code=${SECURITY_CODE}"
                                 // script: "curl -s -o /dev/null -w '%{http_code}' https://${PUBLIC_URL}/?name=user+test&security_code=${SECURITY_CODE}"
                             ).trim()
                             
@@ -180,7 +180,6 @@ pipeline {
     post {
         success {
             echo 'Pipeline completed successfully!'
-            slackSend(color: 'good', message: "Deployment SUCCESSFUL: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
         }
         failure {
             echo 'Pipeline failed!'
@@ -189,12 +188,7 @@ pipeline {
                 def errorLog = currentBuild.rawBuild.getLog(100).findAll { 
                     it.contains('ERROR') || it.contains('Error') || it.contains('FAIL') 
                 }.take(10).join('\n')
-                
-                slackSend(
-                    color: 'danger', 
-                    message: "Deployment FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n" +
-                             "Last Error Context:\n${errorLog ?: 'No error details available'}"
-                )
+        
             }
         }
         always {
