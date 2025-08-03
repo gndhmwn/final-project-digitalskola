@@ -11,6 +11,7 @@ pipeline {
         // Environment specific variables
         STAGING_PORT = '8000'
         PRODUCTION_PORT = '8080'  // Different port from staging
+        SECURITY_CODE = credentials('security_code')
         
         STAGING_DIR = '/home/mr-admin/container/final-project-staging'
         PRODUCTION_DIR = '/home/mr-admin/container/final-project-prod'
@@ -70,7 +71,7 @@ pipeline {
                         try {
                             def response = sh(
                                 returnStdout: true, 
-                                script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${STAGING_PORT}"
+                                script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${STAGING_PORT}/?name=user+test&security_code=${SECURITY_CODE}"
                             ).trim()
                             
                             if (response == "200") {
@@ -150,7 +151,7 @@ pipeline {
                         try {
                             def response = sh(
                                 returnStdout: true, 
-                                script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${PRODUCTION_PORT}"
+                                script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${PRODUCTION_PORT}/?name=user+test&security_code=${SECURITY_CODE}"
                             ).trim()
                             
                             if (response == "200") {
