@@ -20,7 +20,7 @@
 🌐 [Production Environment](https://final-project.ninja-sawit.tech/?name=Ganda+Himawan&security_code=nikah2025)  
 <div align="center">
   <img src="repo-images/website.png" width="600"/>
-  <p><em>Figure 1: Production Application</em></p>
+  <p><em>Figure 1: Website</em></p>
 </div>
 
 ### 4. Monitoring System
