@@ -15,7 +15,7 @@ pipeline {
         STAGING_DIR = '/home/mr-admin/container/final-project-staging'
         PRODUCTION_DIR = '/home/mr-admin/container/final-project-prod'
         
-        SSH_CREDENTIALS = credentials('id_rsa')
+        SSH_CREDENTIALS = credentials('ssh_auth')
         
         // Docker Compose files
         DOCKER_COMPOSE_STAGING = 'docker-compose.staging.yml'
