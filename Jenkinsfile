@@ -15,7 +15,7 @@ pipeline {
         STAGING_DIR = '/home/mr-admin/container/final-project-staging'
         PRODUCTION_DIR = '/home/mr-admin/container/final-project-prod'
         
-        SSH_CREDENTIALS = credentials('ssh_auth')
+        SSH_CREDENTIALS_ID = 'ssh_auth'
         
         // Docker Compose files
         DOCKER_COMPOSE_STAGING = 'docker-compose.staging.yml'
@@ -34,16 +34,20 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 echo 'Deploying to staging environment...'
-                sshagent(credentials: [env.SSH_CREDENTIALS]) {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: env.SSH_CREDENTIALS_ID,
+                    keyFileVariable: 'SSH_KEY',
+                    usernameVariable: 'SSH_USERNAME'
+                )]) {
                     sh """
                         # Prepare staging directory
-                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} "mkdir -p ${STAGING_DIR}"
+                        ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} "mkdir -p ${STAGING_DIR}"
                         
                         # Sync code to staging
-                        rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${SERVER_USER}${SERVER_HOST}:${STAGING_DIR}/
+                        rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -i ${SSH_KEY}" ./ ${SERVER_USER}@${SERVER_HOST}:${STAGING_DIR}/
                         
                         # Deploy using staging compose file
-                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} \
+                        ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} \
                             "cd ${STAGING_DIR} && \
                             export STAGING_PORT=${STAGING_PORT} && \
                             docker compose -f ${DOCKER_COMPOSE_STAGING} down --remove-orphans && \
@@ -102,17 +106,21 @@ pipeline {
             }
             steps {
                 echo 'Deploying to production environment...'
-                sshagent(credentials: [env.SSH_CREDENTIALS]) {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: env.SSH_CREDENTIALS_ID,
+                    keyFileVariable: 'SSH_KEY',
+                    usernameVariable: 'SSH_USERNAME'
+                )]) {
                     sh """
                         # Prepare production directory
-                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} "mkdir -p ${PRODUCTION_DIR}"
+                        ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} "mkdir -p ${PRODUCTION_DIR}"
                         
                         # Sync code to production (from staging for consistency)
-                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} \
+                        ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} \
                             "rsync -avz --delete ${STAGING_DIR}/ ${PRODUCTION_DIR}/"
                         
                         # Deploy using production compose file
-                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} \
+                        ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} \
                             "cd ${PRODUCTION_DIR} && \
                             export PRODUCTION_PORT=${PRODUCTION_PORT} && \
                             docker compose -f ${DOCKER_COMPOSE_PROD} down --remove-orphans && \
@@ -169,12 +177,18 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed!'
-            slackSend(
-                color: 'danger', 
-                message: "Deployment FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n" +
-                         "Stage: ${currentBuild.currentStage.name}\n" +
-                         "Error: ${currentBuild.currentStage.errorMessage}"
-            )
+            script {
+                // Get the last 10 lines of the build log for error context
+                def errorLog = currentBuild.rawBuild.getLog(100).findAll { 
+                    it.contains('ERROR') || it.contains('Error') || it.contains('FAIL') 
+                }.take(10).join('\n')
+                
+                slackSend(
+                    color: 'danger', 
+                    message: "Deployment FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n" +
+                             "Last Error Context:\n${errorLog ?: 'No error details available'}"
+                )
+            }
         }
         always {
             echo 'Cleaning up workspace...'
