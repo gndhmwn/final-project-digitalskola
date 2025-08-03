@@ -153,7 +153,6 @@ pipeline {
                                 returnStdout: true, 
                                 // script: "curl -s -o /dev/null -w '%{http_code}' http://${SERVER_HOST}:${PRODUCTION_PORT}/?name=user+test&security_code=${SECURITY_CODE}"
                                 script: "curl -s -o /dev/null -w '%{http_code}' https://final-project.ninja-sawit.tech/?name=Ganda%20Himawan&security_code=${SECURITY_CODE}"
-                                                        ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} \
                             ).trim()
                             
                             if (response == "200") {
