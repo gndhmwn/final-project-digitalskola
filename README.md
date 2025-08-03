@@ -58,5 +58,12 @@ This project demonstrates a complete **cloud engineering** implementation featur
   <p><em>Figure 4: Scaling Configuration</em></p>
 </div>
 
+### 6. Security
+⚖️ **Security rules for Nginx (Reverse proxy)**  
+<div align="center">
+  <img src="repo-images/security.png" width="600"/>
+  <p><em>Figure 5: Security Rules</em></p>
+</div>
+
 ---
 
