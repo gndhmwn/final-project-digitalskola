@@ -50,7 +50,6 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} \
                             "cd ${STAGING_DIR} && \
                             export STAGING_PORT=${STAGING_PORT} && \
-                            docker compose -f ${DOCKER_COMPOSE_STAGING} down --remove-orphans && \
                             docker compose -f ${DOCKER_COMPOSE_STAGING} up --build -d"
                     """
                 }
@@ -115,7 +114,7 @@ pipeline {
                         # Remove staging compose
                         ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} \
                             "cd ${STAGING_DIR} && \
-                            docker compose -f ${DOCKER_COMPOSE_STAGING} down"
+                            docker compose -f ${DOCKER_COMPOSE_STAGING} down --remove-orphans"
 
                         # Prepare production directory
                         ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} "mkdir -p ${PRODUCTION_DIR}"
