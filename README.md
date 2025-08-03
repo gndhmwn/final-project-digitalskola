@@ -1,18 +1,5 @@
 # Final Project Cloud Engineer - DigitalSkola
 
-## Project Overview
-🛠 **Cloud Application Deployment with Manual Infrastructure Setup**  
-
-This project demonstrates a complete **cloud engineering** implementation featuring:
-- **CI/CD automation** using Jenkins
-- **Manual cloud infrastructure** configuration
-- **Application deployment** best practices
-- **Comprehensive monitoring** (metrics + logs)
-- **Scaling** capabilities
-
----
-
-## Project Deliverables
 
 ### 1. Git Repository
 🔗 [final-project-digitalskola](https://github.com/gndhmwn/final-project-digitalskola)  
