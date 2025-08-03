@@ -5,6 +5,7 @@ pipeline {
         GIT_URL = 'https://github.com/gndhmwn/final-project-digitalskola.git'
         GIT_BRANCH = 'main'
         
+        SERVER_USER = credentials('user')
         SERVER_HOST = 'my.deploy.srv'
         
         // Environment specific variables
@@ -14,7 +15,7 @@ pipeline {
         STAGING_DIR = '/home/mr-admin/container/final-project-staging'
         PRODUCTION_DIR = '/home/mr-admin/container/final-project-prod'
         
-        SSH_CREDENTIALS = 'id_rsa'
+        SSH_CREDENTIALS = credentials('id_rsa')
         
         // Docker Compose files
         DOCKER_COMPOSE_STAGING = 'docker-compose.staging.yml'
@@ -36,13 +37,13 @@ pipeline {
                 sshagent(credentials: [env.SSH_CREDENTIALS]) {
                     sh """
                         # Prepare staging directory
-                        ssh -o StrictHostKeyChecking=no jenkins@${SERVER_HOST} "mkdir -p ${STAGING_DIR}"
+                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} "mkdir -p ${STAGING_DIR}"
                         
                         # Sync code to staging
-                        rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ jenkins@${SERVER_HOST}:${STAGING_DIR}/
+                        rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${SERVER_USER}${SERVER_HOST}:${STAGING_DIR}/
                         
                         # Deploy using staging compose file
-                        ssh -o StrictHostKeyChecking=no jenkins@${SERVER_HOST} \
+                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} \
                             "cd ${STAGING_DIR} && \
                             export STAGING_PORT=${STAGING_PORT} && \
                             docker compose -f ${DOCKER_COMPOSE_STAGING} down --remove-orphans && \
@@ -104,14 +105,14 @@ pipeline {
                 sshagent(credentials: [env.SSH_CREDENTIALS]) {
                     sh """
                         # Prepare production directory
-                        ssh -o StrictHostKeyChecking=no jenkins@${SERVER_HOST} "mkdir -p ${PRODUCTION_DIR}"
+                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} "mkdir -p ${PRODUCTION_DIR}"
                         
                         # Sync code to production (from staging for consistency)
-                        ssh -o StrictHostKeyChecking=no jenkins@${SERVER_HOST} \
+                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} \
                             "rsync -avz --delete ${STAGING_DIR}/ ${PRODUCTION_DIR}/"
                         
                         # Deploy using production compose file
-                        ssh -o StrictHostKeyChecking=no jenkins@${SERVER_HOST} \
+                        ssh -o StrictHostKeyChecking=no ${SERVER_USER}${SERVER_HOST} \
                             "cd ${PRODUCTION_DIR} && \
                             export PRODUCTION_PORT=${PRODUCTION_PORT} && \
                             docker compose -f ${DOCKER_COMPOSE_PROD} down --remove-orphans && \
