@@ -5,7 +5,7 @@ pipeline {
         GIT_URL = 'https://github.com/gndhmwn/final-project-digitalskola.git'
         GIT_BRANCH = 'main'
         
-        SERVER_USER = credentials('user')
+        SERVER_USER = credentials('ssh_user')
         SERVER_HOST = 'my.deploy.srv'
         
         // Environment specific variables
