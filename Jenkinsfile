@@ -115,7 +115,7 @@ pipeline {
                         # Remove staging compose
                         ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} \
                             "cd ${STAGING_DIR} && \
-                            docker compose -f ${DOCKER_COMPOSE_STAGING} down "
+                            docker compose -f ${DOCKER_COMPOSE_STAGING} down"
 
                         # Prepare production directory
                         ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SERVER_USER}@${SERVER_HOST} "mkdir -p ${PRODUCTION_DIR}"
