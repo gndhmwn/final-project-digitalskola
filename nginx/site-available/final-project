@@ -1,0 +1,58 @@
+server {
+    listen 80;
+    server_name final-project.ninja-sawit.tech;
+
+#    ssl_certificate /etc/nginx/ssl/fullchain.pem;
+#    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+    
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+    add_header Referrer-Policy "strict-origin";
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'self'; form-action 'self';";
+
+    # Logging
+    access_log /var/log/nginx/final-project_access.log json_combined;
+    error_log /var/log/nginx/final-project_error.log;
+    
+    # WAF rules
+    include /etc/nginx/security/waf_rules.conf;
+
+    # Lokasi khusus untuk static files di backend
+    location ~* ^/static/.*\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        proxy_pass http://[backend-IP]:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        
+        # Override cache header dari backend (opsional)
+        proxy_hide_header Cache-Control;
+        proxy_hide_header Expires;
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
+    
+    location / {
+        
+        proxy_pass http://[backend-IP]:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Additional security headers for proxied requests
+        proxy_set_header X-Secure "1";
+    }
+    
+    # Block common exploits
+    location ~* (wp-admin|wp-login|\.git|\.env|\.sql|\.bak|\.old|\.swp) {
+        deny all;
+        return 403;
+    }
+    
+    # Static files
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
+}
