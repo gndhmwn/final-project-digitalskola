@@ -21,6 +21,10 @@ venv/
 env/
 ENV/
 
+
+/repo-images/
+repo-images/
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
